@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 GCP VM Inventory Agent — Vertex AI Edition
+# 🤖 GCP VM Inventory Agent - Vertex AI Edition
 
 ### AI-Powered Infrastructure Monitoring · Google ADK · Vertex AI · BigQuery · Slack · GitHub Actions
 
@@ -15,7 +15,7 @@
 
 ---
 
-*An AI-powered GCP VM inventory agent built with Google ADK and Vertex AI. Scans all virtual machines across GCP projects, performs health checks, pushes data to BigQuery for historical analytics, and sends rich formatted reports to Slack — triggered automatically every day at 2:00 PM IST via GitHub Actions. Zero stored credentials — powered by Workload Identity Federation.*
+*An AI-powered GCP VM inventory agent built with Google ADK and Vertex AI. Scans all virtual machines across GCP projects, performs health checks, pushes data to BigQuery for historical analytics, and sends rich formatted reports to Slack - triggered automatically every day at 2:00 PM IST via GitHub Actions. Zero stored credentials - powered by Workload Identity Federation.*
 
 </div>
 
@@ -41,9 +41,9 @@
 
 ## 🌐 Overview
 
-This is the **Vertex AI edition** of the GCP VM Inventory Agent. Unlike the original version which uses a Gemini API Key for local development, this edition uses **Vertex AI** for LLM inference — allowing the agent to authenticate entirely through **Workload Identity Federation (WIF)** with zero stored credentials.
+This is the **Vertex AI edition** of the GCP VM Inventory Agent. Unlike the original version which uses a Gemini API Key for local development, this edition uses **Vertex AI** for LLM inference - allowing the agent to authenticate entirely through **Workload Identity Federation (WIF)** with zero stored credentials.
 
-The pipeline runs automatically every day at **2:00 PM IST** via GitHub Actions — no manual trigger needed.
+The pipeline runs automatically every day at **2:00 PM IST** via GitHub Actions - no manual trigger needed.
 
 ### 🔑 Key Facts
 
@@ -52,7 +52,7 @@ The pipeline runs automatically every day at **2:00 PM IST** via GitHub Actions 
 | 🤖 **Agent Framework** | Google Agent Development Kit (ADK) 2.1.0 |
 | 🧠 **LLM** | Gemini 2.5 Flash Lite via **Vertex AI** |
 | ☁️ **Cloud Platform** | Google Cloud Platform |
-| 🔐 **Authentication** | Workload Identity Federation (WIF) — zero JSON keys |
+| 🔐 **Authentication** | Workload Identity Federation (WIF) - zero JSON keys |
 | 📊 **Analytics** | BigQuery + Looker Studio |
 | 📢 **Notifications** | Slack (Block Kit rich messages) |
 | 📁 **Output Format** | Excel (.xlsx) with styled status cells |
@@ -70,15 +70,15 @@ The pipeline runs automatically every day at **2:00 PM IST** via GitHub Actions 
 | 🗄️ **BigQuery Push** | Appends date-partitioned rows with automatic deduplication |
 | 📊 **Dashboard** | Looker Studio dashboard auto-updates from BigQuery |
 | 📣 **Slack Report** | Rich Block Kit message with VM summary and Excel attachment |
-| ⏰ **Auto Schedule** | GitHub Actions cron — runs daily at 2:00 PM IST automatically |
+| ⏰ **Auto Schedule** | GitHub Actions cron - runs daily at 2:00 PM IST automatically |
 
 ---
 
 ## 🏛️ Architecture
 
-![GCP VM Inventory Agent — Vertex AI Architecture](docs/snapshots/gcp_vm_agent_architecture.png)
+![GCP VM Inventory Agent - Vertex AI Architecture](docs/snapshots/gcp_vm_agent_architecture.png)
 
-> The diagram shows both trigger paths — GitHub Actions cron (automated) and Developer via ADK Web UI (manual) — converging at the ADK Agent which uses Vertex AI for LLM inference.
+> The diagram shows both trigger paths - GitHub Actions cron (automated) and Developer via ADK Web UI (manual) - converging at the ADK Agent which uses Vertex AI for LLM inference.
 
 ### 🔄 Layer Breakdown
 
@@ -137,11 +137,11 @@ gcp-inventory-agent-vertexai/
 │
 ├── 📁 .github/
 │   └── 📁 workflows/
-│       └── 📄 daily_adk_agent.yml      # GitHub Actions — 2:00 PM IST daily
+│       └── 📄 daily_adk_agent.yml      # GitHub Actions - 2:00 PM IST daily
 │
 ├── 📁 agent/
 │   ├── 📄 __init__.py                  # ADK module entry point
-│   ├── 📄 agent.py                     # Root ADK agent — Vertex AI model + tools
+│   ├── 📄 agent.py                     # Root ADK agent - Vertex AI model + tools
 │   └── 📄 tools.py                     # All 5 tool implementations
 │
 ├── 📁 docs/
@@ -151,7 +151,7 @@ gcp-inventory-agent-vertexai/
 │                                       #   Compute Engine · Monitoring · Resource Manager
 │
 ├── 📄 push_to_bigquery.py              # BigQuery push with schema + deduplication
-├── 📄 run_agent_scheduled.py           # Scheduled pipeline — runs ADK agent via Python
+├── 📄 run_agent_scheduled.py           # Scheduled pipeline - runs ADK agent via Python
 ├── 📄 adk_vertex_ai_architecture.svg  # Architecture diagram
 ├── 📄 requirements.txt                 # Python dependencies
 └── 📄 README.md                        # This file
@@ -208,7 +208,7 @@ Go to repo → **Settings** → **Secrets and variables** → **Actions** → **
 | `SLACK_BOT_TOKEN` | `xoxb-your-token` |
 | `SLACK_CHANNEL_ID` | `C0XXXXXXXXX` |
 
-> **Note:** No `GOOGLE_API_KEY` needed — Vertex AI uses WIF OAuth token directly.
+> **Note:** No `GOOGLE_API_KEY` needed - Vertex AI uses WIF OAuth token directly.
 
 ### 🔗 WIF Binding for This Repo
 
@@ -339,13 +339,13 @@ ORDER BY snapshot_date;
 
 | Chart | Dimension | Metric | Purpose |
 |---|---|---|---|
-| Scorecard | — | Record Count | Total VMs |
+| Scorecard | - | Record Count | Total VMs |
 | Scorecard | `machine_status` Contains `Running` | Record Count | Running VMs |
 | Scorecard | `machine_status` Contains `Stopped` | Record Count | Stopped VMs |
 | Scorecard | `snapshots` Is null | Record Count | No Backup VMs |
 | Bar chart | `machine_status` | Record Count | VM Status |
 | Bar chart | `machine_type` | Record Count | By Machine Type |
-| Table | All key fields | — | Full inventory |
+| Table | All key fields | - | Full inventory |
 | Time series | `snapshot_date` | Record Count | VM count over time |
 
 > **Tip:** Add a **Date Range Control** at the top set to `This week` so all charts always show current data.
@@ -406,27 +406,27 @@ To run immediately without waiting for the schedule:
 
 ## 📸 Snapshots
 
-### 1️⃣ ADK Web UI — Agent Running
+### 1️⃣ ADK Web UI - Agent Running
 ![ADK Web UI](docs/snapshots/1_adk_web_ui.png)
 
 ---
 
-### 2️⃣ Full Pipeline Execution — All 4 Tools Chained
+### 2️⃣ Full Pipeline Execution - All 4 Tools Chained
 ![Full Pipeline](docs/snapshots/2_full_pipeline_execution.png)
 
 ---
 
-### 3️⃣ Excel Report — VM Inventory (26 Columns)
+### 3️⃣ Excel Report - VM Inventory (26 Columns)
 ![Excel Report](docs/snapshots/3_excel_report.png)
 
 ---
 
-### 4️⃣ BigQuery Table — vm_details
+### 4️⃣ BigQuery Table - vm_details
 ![BigQuery Table](docs/snapshots/4_bigquery_table.png)
 
 ---
 
-### 5️⃣ Slack Notification — Rich Block Kit Report + Excel Attachment
+### 5️⃣ Slack Notification - Rich Block Kit Report + Excel Attachment
 ![Slack Notification](docs/snapshots/5_slack_notification.png)
 
 ---
@@ -436,7 +436,7 @@ To run immediately without waiting for the schedule:
 
 ---
 
-### 7️⃣ GitHub Actions — Daily Scheduled Run
+### 7️⃣ GitHub Actions - Daily Scheduled Run
 ![GitHub Actions](docs/snapshots/gcp_vm_agent_architecture.png)
 
 ---
@@ -445,8 +445,7 @@ To run immediately without waiting for the schedule:
 
 | Repository | Purpose |
 |---|---|
-| [`gcp-vm-inventory-agent`](https://github.com/bikram-singh/gcp-vm-inventory-agent) | Original — Gemini API Key · Manual ADK Web UI |
-| [`gcp-inventory-agent-vertexai`](https://github.com/bikram-singh/gcp-inventory-agent-vertexai) | **This repo** — Vertex AI · WIF · GitHub Actions scheduler |
+| [`gcp-inventory-agent-vertexai`](https://github.com/bikram-singh/gcp-inventory-agent-vertexai) | Vertex AI · WIF · GitHub Actions scheduler |
 
 ---
 
