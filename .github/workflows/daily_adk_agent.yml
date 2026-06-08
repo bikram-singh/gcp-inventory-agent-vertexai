@@ -1,0 +1,111 @@
+# .github/workflows/daily_adk_agent.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Daily ADK Agent Pipeline — Runs the ACTUAL ADK Agent with Gemini
+# Runs every day at 11:50 PM IST (6:20 PM UTC)
+# Auth: WIF for all GCP APIs + Vertex AI (Gemini) — no JSON key needed
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Daily ADK Agent Pipeline
+
+on:
+  schedule:
+    - cron: "20 18 * * *"    # 11:50 PM IST daily
+
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: "GCP Project ID (leave blank to use default)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  id-token: write            # Required for WIF
+
+jobs:
+  run-adk-agent:
+    name: Run ADK Agent
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── WIF Auth — covers GCP APIs + Vertex AI (Gemini) ────────
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_NONPROD }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT_NONPROD }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Determine Project ID
+        id: project
+        run: |
+          if [ -n "${{ github.event.inputs.project_id }}" ]; then
+            echo "PROJECT_ID=${{ github.event.inputs.project_id }}" >> $GITHUB_OUTPUT
+          else
+            echo "PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run ADK Agent (Vertex AI + Tools)
+        env:
+          # ── Vertex AI — no API key needed, WIF handles auth ──
+          GOOGLE_GENAI_USE_VERTEXAI : "TRUE"
+          GOOGLE_CLOUD_PROJECT      : ${{ steps.project.outputs.PROJECT_ID }}
+          GOOGLE_CLOUD_LOCATION     : "us-central1"
+          # ── GCP ──
+          GCP_PROJECT_ID            : ${{ steps.project.outputs.PROJECT_ID }}
+          # ── Slack ──
+          SLACK_BOT_TOKEN           : ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID          : ${{ secrets.SLACK_CHANNEL_ID }}
+        run: python run_agent_scheduled.py
+
+      - name: Upload Excel report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: adk-vm-inventory-${{ steps.project.outputs.PROJECT_ID }}-${{ github.run_id }}
+          path: "*.xlsx"
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN  : ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID : ${{ secrets.SLACK_CHANNEL_ID }}
+          GCP_PROJECT_ID   : ${{ steps.project.outputs.PROJECT_ID }}
+        run: |
+          python -c "
+          import os
+          from slack_sdk import WebClient
+          client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+          client.chat_postMessage(
+              channel=os.environ['SLACK_CHANNEL_ID'],
+              text='❌ ADK Agent Pipeline FAILED — check GitHub Actions logs.',
+              blocks=[{
+                  'type': 'section',
+                  'text': {
+                      'type': 'mrkdwn',
+                      'text': (
+                          '❌ *ADK Agent Pipeline Failed*\n'
+                          f'Project: {os.environ[\"GCP_PROJECT_ID\"]}\n'
+                          'Logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+                      )
+                  }
+              }]
+          )
+          "
