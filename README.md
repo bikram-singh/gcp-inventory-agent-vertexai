@@ -76,7 +76,7 @@ The pipeline runs automatically every day at **2:00 PM IST** via GitHub Actions 
 
 ## 🏛️ Architecture
 
-![GCP VM Inventory Agent - Vertex AI Architecture](docs/snapshots/gcp_vm_agent_architecture.png)
+![GCP VM Inventory Agent - Vertex AI Architecture](docs/snapshots/adk_vertex_ai_architecture.png)
 
 > The diagram shows both trigger paths - GitHub Actions cron (automated) and Developer via ADK Web UI (manual) - converging at the ADK Agent which uses Vertex AI for LLM inference.
 
@@ -416,28 +416,24 @@ To run immediately without waiting for the schedule:
 
 ---
 
-### 3️⃣ Excel Report - VM Inventory (26 Columns)
-![Excel Report](docs/snapshots/3_excel_report.png)
+### 3️⃣ BigQuery Table - vm_details
+![BigQuery Table](docs/snapshots/3_bigquery_table.png)
 
 ---
 
-### 4️⃣ BigQuery Table - vm_details
-![BigQuery Table](docs/snapshots/4_bigquery_table.png)
+### 4️⃣ Slack Notification - Rich Block Kit Report + Excel Attachment
+![Slack Notification](docs/snapshots/4_slack_notification.png)
 
 ---
 
-### 5️⃣ Slack Notification - Rich Block Kit Report + Excel Attachment
-![Slack Notification](docs/snapshots/5_slack_notification.png)
+### 5️⃣ Looker Studio Dashboard
+![Looker Studio Dashboard](docs/snapshots/5_looker_studio_dashboard.png)
 
 ---
 
-### 6️⃣ Looker Studio Dashboard
-![Looker Studio Dashboard](docs/snapshots/6_looker_studio_dashboard.png)
+### 6️⃣ GitHub Actions - Daily Scheduled Run
+![GitHub Actions](docs/snapshots/6_Github_Actions_daily_Scheduled_Run.png)
 
----
-
-### 7️⃣ GitHub Actions - Daily Scheduled Run
-![GitHub Actions](docs/snapshots/gcp_vm_agent_architecture.png)
 
 ---
 
